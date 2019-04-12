@@ -3,4 +3,4 @@
 .vscode
 
 # pyc files
-*.pyc
+__pycache__
