@@ -1,4 +1,4 @@
-import base64, uuid
+import base64
 
 
 def convert_password(password):
