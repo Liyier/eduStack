@@ -24,6 +24,7 @@ class User(AbstractUser):
     def __str__(self):
         return "<%s, %s>" % (self.nickname, str(self.email))
 
+    @property
     def age(self):
         if not self.birthday:
             today = datetime.date.today()
@@ -66,6 +67,7 @@ class EmailVerifyCode(models.Model):
         verbose_name = "邮箱验证码"
         verbose_name_plural = verbose_name
 
+    @property
     def is_active(self):
         if time.time() - self.send_time > 60:  # 一分钟过期
             return False
