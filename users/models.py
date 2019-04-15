@@ -19,6 +19,7 @@ class User(AbstractUser):
     avatar = models.ImageField(upload_to="image/%Y/%m",
                                default="image/default/{}.png".format(random.choice(range(1, 6))), max_length=100,
                                verbose_name="头像")
+
     # 学院 一对多
 
     def __str__(self):
