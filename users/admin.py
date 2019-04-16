@@ -6,14 +6,6 @@ from .models import User, EmailVerifyCode, Banner
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
     # 可以控制在后台admin显示的字段
-    pass
-
-
-@admin.register(EmailVerifyCode)
-class EmailVerifyCodeAdmin(admin.ModelAdmin):
-    pass
-
-
-@admin.register(Banner)
-class BannerAdmin(admin.ModelAdmin):
-    pass
+    list_display = ["username", "sex", "email", "mobile", "birthday", "city", "create_time", "is_staff", "is_superuser"]
+    search_fields = ["username", "email", "mobile"]
+    list_filter = ["sex", "birthday", "create_time", "city", "is_staff", "is_superuser"]
