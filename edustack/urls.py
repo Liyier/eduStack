@@ -15,8 +15,12 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 import xadmin
-from users.urls import router
-from users.views import UserView
+from users.views import UserView,UserViewSet
+from rest_framework import routers
+
+
+router = routers.DefaultRouter()
+router.register(r"users", UserViewSet)
 
 
 urlpatterns = [
