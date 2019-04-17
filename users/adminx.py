@@ -1,6 +1,6 @@
 import xadmin
 from xadmin import views
-from .models import Banner, Seesion, EmailVerifyCode
+from .models import Banner, EmailVerifyCode
 
 
 class BaseSetting(object):
@@ -21,20 +21,14 @@ class BannerAdmin(object):
     list_filter = ["index", "create_time"]  # 筛选字段
 
 
-class SeesionAdmin(object):
-    list_display = ["user", "token", "update_time"]
-    search_fields = ["user", "token"]
-    list_filter = ["update_time"]
-
 
 class EmailVerifyCodeAdmin(object):
-    list_display = ["email", "code", "send_type", "send_time"]
+    list_display = ["email", "code", "send_type", "create_time"]
     search_fields = ["email", "code"]
     list_filter = ["send_type", "send_time"]
 
 
 xadmin.site.register(Banner, BannerAdmin)
-xadmin.site.register(Seesion, SeesionAdmin)
 xadmin.site.register(EmailVerifyCode, EmailVerifyCodeAdmin)
 xadmin.site.register(views.BaseAdminView, BaseSetting)
 xadmin.site.register(views.CommAdminView, GlobalSetting)

@@ -10,14 +10,14 @@ class User(AbstractUser):
     mobile = models.CharField(max_length=11, verbose_name="手机号码")
     city = models.CharField(max_length=20, null=True, verbose_name="城市")
     is_active = models.BooleanField(default=True, verbose_name="活跃状态")
-    birthday = models.DateField(verbose_name="生日", null=True)  # 存储 date()
-    sex = models.CharField(max_length=5, choices=(('0', "男"), ("1", "女")), default=random.choice(['0', '1']),
+    birthday = models.DateField(verbose_name="生日", null=True)  #存储 date()
+    sex = models.IntegerField(choices=((0, "男"), (1, "女")), default=random.choice(['0', '1']),
                            verbose_name="性别")
-    create_time = models.DateTimeField(auto_now_add=True, verbose_name="创建时间")  # 存储time.time()
+    # AbstractUser有date_joined 字段， 不再用create_time
     update_time = models.DateTimeField(auto_now=True, verbose_name="更新时间")  # 每次save操作自动保存
     # 设置五张默认头像
-    avatar = models.ImageField(upload_to="image/%Y/%m",
-                               default="image/default/{}.png".format(random.choice(range(1, 6))), max_length=100,
+    avatar = models.ImageField(upload_to="user/%Y/%m",
+                               default="user/default/{}.png".format(random.choice(range(1, 6))), max_length=100,
                                verbose_name="头像")
     # department = models.ForeignKey
 
@@ -34,25 +34,7 @@ class User(AbstractUser):
 
     class Meta:
         db_table = "user"
-        ordering = ["-create_time"]  # 新建用户在前
         verbose_name = "用户"
-        verbose_name_plural = verbose_name
-
-
-class Seesion(models.Model):
-    """用于保存当前对话和身份认证"""
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    token = models.CharField(max_length=100, verbose_name="令牌", null=True, unique=True)
-    update_time = models.DateTimeField(auto_now=True, verbose_name="更新时间")
-
-    def __str__(self):
-        if self.token:
-            return self.user.username + "\t已登录！"
-        else:
-            return self.user.username + "\t未登陆！"
-
-    class Meta:
-        verbose_name = "会话"
         verbose_name_plural = verbose_name
 
 
