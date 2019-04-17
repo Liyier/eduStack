@@ -15,17 +15,8 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 import xadmin
-from users.views import UserView,UserViewSet
-from rest_framework import routers
-
-
-router = routers.DefaultRouter()
-router.register(r"users", UserViewSet)
 
 
 urlpatterns = [
     url(r'^admin/', xadmin.site.urls),
-    url(r"^api_auth/", include("rest_framework.urls")),
-    url(r"api/", include(router.urls)),
-    url(r"users/", UserView.as_view())
 ]
