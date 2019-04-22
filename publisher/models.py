@@ -41,7 +41,6 @@ class Academy(models.Model):
         return "{}".format(self.name)
 
 
-
 class Teacher(User):
     """继承用户 model"""
     teacher_titles = (
