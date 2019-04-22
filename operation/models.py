@@ -53,7 +53,7 @@ class UserFavorite(models.Model):
 
 
 class UserMessage(models.Model):
-    user_id = models.IntegerField(default=0, verbose_name="用户id") # 0 默认给所有用户发送
+    user_id = models.IntegerField(default=0, verbose_name="用户id")  # 0 默认给所有用户发送
     content = models.TextField(verbose_name="消息内容")
     is_read = models.BooleanField(default=False, verbose_name="是否已读")
     create_time = models.DateTimeField(auto_now_add=True, verbose_name="接收时间")
