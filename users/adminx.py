@@ -21,7 +21,6 @@ class BannerAdmin(object):
     list_filter = ["index", "create_time"]  # 筛选字段
 
 
-
 class EmailVerifyCodeAdmin(object):
     list_display = ["email", "code", "send_type", "create_time"]
     search_fields = ["email", "code"]
