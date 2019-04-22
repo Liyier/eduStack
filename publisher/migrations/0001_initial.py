@@ -44,7 +44,7 @@ class Migration(migrations.Migration):
                 ('fav_num', models.IntegerField(default=0, verbose_name='收藏人数')),
                 ('click_num', models.IntegerField(default=0, verbose_name='点击量')),
                 ('title', models.IntegerField(choices=[(1, '讲师'), (2, '副教授'), (3, '教授')], verbose_name='教师职称')),
-                ('academy', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='team.Academy', verbose_name='所属学院')),
+                ('academy', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='publisher.Academy', verbose_name='所属学院')),
             ],
             options={
                 'verbose_name': '教师',
