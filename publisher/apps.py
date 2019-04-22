@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class TeamConfig(AppConfig):
-    name = 'team'
+class PublisherConfig(AppConfig):
+    name = 'publisher'
     verbose_name = "课程发布方"
