@@ -12,10 +12,10 @@ class User(AbstractUser):
     is_active = models.BooleanField(default=True, verbose_name="活跃状态")
     birthday = models.DateField(verbose_name="生日", null=True)  #存储 date()
     sex = models.IntegerField(choices=((0, "男"), (1, "女")), default=random.choice(['0', '1']),
-                           verbose_name="性别")
+                              verbose_name="性别")
     # AbstractUser有date_joined 字段， 不再用create_time
     update_time = models.DateTimeField(auto_now=True, verbose_name="更新时间")  # 每次save操作自动保存
-    # 设置五张默认头像
+    #设置五张默认头像
     avatar = models.ImageField(upload_to="user/%Y/%m",
                                default="user/default/{}.png".format(random.choice(range(1, 6))), max_length=100,
                                verbose_name="头像")
