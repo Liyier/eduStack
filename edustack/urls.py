@@ -15,10 +15,12 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.views.generic import TemplateView
+from users.views import LoginView
 import xadmin
 
 
 urlpatterns = [
     url(r'^admin/', xadmin.site.urls),
-    url(r'^$', TemplateView.as_view(template_name="index.html"), name="index")
+    url(r'^$', TemplateView.as_view(template_name="index.html"), name="index"),
+    url(r'^login/', view=LoginView.as_view(), name="login")
 ]
