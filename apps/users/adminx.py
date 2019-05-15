@@ -1,6 +1,6 @@
 import xadmin
 from xadmin import views
-from .models import Banner, EmailVerifyCode
+from .models import Banner, EmailVerifyRecord
 
 
 class BaseSetting(object):
@@ -21,14 +21,14 @@ class BannerAdmin(object):
     list_filter = ["index", "create_time"]  # 筛选字段
 
 
-class EmailVerifyCodeAdmin(object):
+class EmailVerifyRecordAdmin(object):
     list_display = ["email", "code", "send_type", "create_time"]
     search_fields = ["email", "code"]
     list_filter = ["send_type", "send_time"]
 
 
 xadmin.site.register(Banner, BannerAdmin)
-xadmin.site.register(EmailVerifyCode, EmailVerifyCodeAdmin)
+xadmin.site.register(EmailVerifyRecord, EmailVerifyRecordAdmin)
 xadmin.site.register(views.BaseAdminView, BaseSetting)
 xadmin.site.register(views.CommAdminView, GlobalSetting)
 

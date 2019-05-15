@@ -47,7 +47,8 @@ INSTALLED_APPS = [
     'publisher',
     'operation',
     "xadmin",
-    'crispy_forms'
+    'crispy_forms',
+    'captcha'
 ]
 
 AUTH_USER_MODEL = 'users.User'
@@ -144,3 +145,10 @@ STATICFILES_DIRS = (
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+EMAIL_HOST = "smtp.sina.com"
+EMAIL_PORT = 25
+EMAIL_HOST_USER = "edustack@sina.com"
+EMAIL_HOST_PASSWORD = "eduStack@sina"
+EMAIL_USE_TLS = False
+EMAIL_FROM = "edustack@sina.com"

@@ -21,7 +21,7 @@ class UserCourse(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="用户")
     course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name="课程")
     create_time = models.DateTimeField(auto_now_add=True, verbose_name="学习开始时间")
-    # speed_time =  学习时长
+    # speed_time=学习时长
 
     class Meta:
         verbose_name = "课程学习"
@@ -34,7 +34,7 @@ class UserCourse(models.Model):
 class UserFavorite(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="用户")
-    data_id = models.IntegerField(default=0, verbose_name="数据id")  # 学院， 课程， 教师的主键id, 默认无收藏
+    data_id = models.IntegerField(default=0, verbose_name="数据id")  # 学院,课程,教师的主键id,默认无收藏
     fav_type = models.IntegerField(
         choices=(
             (1, "课程"),

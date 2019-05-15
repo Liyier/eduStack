@@ -6,7 +6,7 @@ import random, datetime, time
 # Create your models here.
 class User(AbstractUser):
     username = models.CharField(max_length=30, verbose_name="用户名", unique=True)
-    email = models.EmailField(max_length=150, verbose_name="邮箱")
+    email = models.EmailField(max_length=150, verbose_name="邮箱", unique=True)
     mobile = models.CharField(max_length=11, verbose_name="手机号码")
     city = models.CharField(max_length=20, null=True, verbose_name="城市")
     is_active = models.BooleanField(default=True, verbose_name="活跃状态")
@@ -27,7 +27,7 @@ class User(AbstractUser):
             today = datetime.date.today()
             return today.year - self.birthday.year
         else:
-            return -1  # 未知年龄
+            return -1  #未知年龄
 
     def __str__(self):
         return "<%s, %s>" % (self.username, str(self.email))
@@ -55,23 +55,17 @@ class Banner(models.Model):
         return "<{}: {}>".format(self.index, self.title)
 
 
-class EmailVerifyCode(models.Model):
+class EmailVerifyRecord(models.Model):
     """邮箱验证码"""
     code = models.CharField(max_length=20, verbose_name="验证码")
     email = models.CharField(max_length=30, verbose_name="邮箱")
     send_time = models.DateTimeField(auto_now_add=True, verbose_name="发送时间")
     send_type = models.CharField(max_length=10, choices=(("register", "注册"), ("forget", "找回密码")), verbose_name="验证码类型")
+    is_active = models.BooleanField(default=True, verbose_name="是否有效")
 
     class Meta:
         verbose_name = "邮箱验证码"
         verbose_name_plural = verbose_name
-
-    @property
-    def is_active(self):
-        if time.time() - self.send_time > 60:  # 一分钟过期
-            return False
-        else:
-            return True
 
     def __str__(self):
         return "<{}  {}: {}>".format(self.send_time, self.email, self.code)
