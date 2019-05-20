@@ -48,8 +48,16 @@ INSTALLED_APPS = [
     'operation',
     "xadmin",
     'crispy_forms',
-    'captcha'
+    'captcha',
+    'pure_pagination'
 ]
+
+PAGINATION_SETTINGS = {
+    'PAGE_RANGE_DISPLAYED': 10,
+    'MARGIN_PAGES_DISPLAYED': 2,
+
+    'SHOW_FIRST_PAGE_WHEN_INVALID': True,
+}
 
 AUTH_USER_MODEL = 'users.User'
 
@@ -78,6 +86,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.media'
             ],
         },
     },

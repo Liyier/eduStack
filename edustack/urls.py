@@ -15,9 +15,13 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.views.generic import TemplateView
-from users.views import LoginView, RegisterView, ActiveView, ForgetPasswordView
+from users.views import LoginView, RegisterView, ActiveView, ForgetPasswordView, LogoutView, UserVerifyView
+from users.views import PasswordResetView
 import xadmin
 from django.urls import path
+from django.views.static import serve
+from .settings import MEDIA_ROOT
+from publisher.views import UserFavView
 
 
 urlpatterns = [
@@ -27,5 +31,11 @@ urlpatterns = [
     url(r"^register/", view=RegisterView.as_view(), name="register"),
     url(r'^captcha/', include('captcha.urls')),
     path("user_active/<code>/", view=ActiveView.as_view()),
-    path("forget_pwd/", view=ForgetPasswordView.as_view(), name="forget_password")
+    path("forget_pwd/", view=ForgetPasswordView.as_view(), name="forget_password"),
+    path("logout/", view=LogoutView.as_view(), name="logout"),
+    path("password_forget/<code>", view=UserVerifyView.as_view()),
+    path("password_reset/", view=PasswordResetView.as_view(), name="password_reset"),
+    path("publisher/", include("publisher.urls")),
+    url(r"^media/(?P<path>.*)", serve, {"document_root": MEDIA_ROOT}),
+    path("user_collect/", view=UserFavView.as_view(), name="user_fav")
 ]
