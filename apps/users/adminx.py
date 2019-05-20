@@ -22,7 +22,7 @@ class BannerAdmin(object):
 
 
 class EmailVerifyRecordAdmin(object):
-    list_display = ["email", "code", "send_type", "create_time"]
+    list_display = ["email", "code", "send_type", "send_time"]
     search_fields = ["email", "code"]
     list_filter = ["send_type", "send_time"]
 
