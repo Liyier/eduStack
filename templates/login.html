@@ -37,7 +37,7 @@
 <header>
     <div class="c-box fff-box">
         <div class="wp header-box">
-            <p class="fl hd-tips">eduStack，大学生在线教育！</p>
+            <p class="fl hd-tips">eduStack - 大学生在线教育</p>
             <ul class="fr hd-bar">
                 <li>服务电话：<span>33333333</span></li>
                 <li class="active"><a href="{% url 'login' %}">[登录]</a></li>
@@ -51,7 +51,6 @@
         <div class="login-box clearfix">
             <div class="hd-login clearfix">
                 <a class="index-logo" href="{% url 'index' %}"></a>
-                <h1>用户登录</h1>
                 <a class="index-font" href="{% url 'index' %}">回到首页</a>
             </div>
             <div class="fl slide">
@@ -69,24 +68,53 @@
                 <h2>帐号登录</h2>
                 <form action="{% url 'login' %}" method="post" autocomplete="off">
                     {% csrf_token %}
-                    <div class="form-group marb20  {% if errors.username %}errorput{% endif %}"  >
+                {% if register_form %}
+                    <div class="form-group marb20 "  >
                         <label>账&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;户</label>
                         <input name="username" id="account_l" type="text" value="{{ register_form.email.value }}" placeholder="用户名/邮箱" />
                     </div>
                     <div class="error btns login-form-tips" id="jsLoginTips">
-                        {{ errors.username }}
                     </div>
-                    <div class="form-group marb8 {% if errors.password %}errorput{% endif %}">
+                    <div class="form-group marb8 ">
                         <label>密&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;码</label>
                         <input name="password" id="password_l" type="password" value="{{ register_form.password.value }}" placeholder="请输入您的密码" />
                     </div>
                     <div class="error btns login-form-tips" id="jsLoginTips">
-                        {{ msg }}
-                        {{ errors.password }}
                     </div>
+                {% elif password_reset_form %}
+                    <div class="form-group marb20 "  >
+                        <label>账&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;户</label>
+                        <input name="username" id="account_l" type="text" value="{{ password_reset_form.email.value }}" placeholder="用户名/邮箱" />
+                    </div>
+                    <div class="error btns login-form-tips" id="jsLoginTips">
+                    </div>
+                    <div class="form-group marb8 ">
+                        <label>密&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;码</label>
+                        <input name="password" id="password_l" type="password" value="{{ password_reset_form.sure_password.value }}" placeholder="请输入您的密码" />
+                    </div>
+                    <div class="error btns login-form-tips" id="jsLoginTips">
+                    </div>
+                {% else %}
+                    <div class="form-group marb20  {% if login_form.errors.username %}errorput{% endif %}"  >
+                        <label>账&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;户</label>
+                        <input name="username" id="account_l" type="text" value="{{ login_form.username.value }}" placeholder="用户名/邮箱" />
+                    </div>
+                    <div class="error btns login-form-tips" id="jsLoginTips">
+                        {{ login_form.errors.username }}
+                    </div>
+                    <div class="form-group marb8 {% if login_form.errors.password %}errorput{% endif %}">
+                        <label>密&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;码</label>
+                        <input name="password" id="password_l" type="password" value="{{ login_form.password.value }}" placeholder="请输入您的密码" />
+                    </div>
+                    <div class="error btns login-form-tips" id="jsLoginTips">
+                        {{ msg }}
+                        {{ login_form.errors.password }}
+                    </div>
+                {% endif %}
+                    
                      <div class="auto-box marb38">
 
-                        <a class="fr" href="{% url 'forget_password' %}">忘记密码？</a>
+                        <a class="fr" href="{% url 'forget_password' %}">忘记密码?</a>
                      </div>
                      <input class="btn btn-green" id="jsLoginBtn" type="submit" value="立即登录 > " />
                 </form>
