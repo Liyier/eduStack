@@ -7,7 +7,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('course', '0004_remove_video_chapter'),
+        ('course', '0003_course_publisher'),
     ]
 
     operations = [

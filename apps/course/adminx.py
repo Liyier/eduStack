@@ -5,7 +5,7 @@ from .models import Course, Chapter, Video, CourseResource
 
 class CourseAdmin(object):
     list_display = ["name", "level", "description", "time", "fav_num", "learn_num", "click_num", "create_time"]
-    search_fields = ["name", "description"] # author or publisher
+    search_fields = ["name", "description"]  # author or publisher
     list_filter = ["level", "time", "fav_num", "learn_num", "click_num", "create_time"]
 
 

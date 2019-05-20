@@ -9,19 +9,19 @@ from .models import *
 
 class CourseCommentsAdmin(object):
     list_display = ["user", "course", "comment", "create_time"]
-    search_fields = ["user", "course", "comment"]
+    search_fields = ["user_name", "course", "comment"]
     list_filter = ["user", "course", "create_time"]
 
 
 class UserCourseAdmin(object):
     list_display = ["user", "course", "create_time"]
-    search_fields = ["user", "course"]
+    search_fields = ["user_ name", "course"]
     list_filter = ["user", "course", "create_time"]
 
 
 class UserFavoriteAdmin(object):
     list_display = ["user", "data_id", "fav_type", "create_time"]
-    search_fields = ["user", "data_id"]
+    search_fields = ["user_name", "data_id"]
     list_filter = ["user", "data_id", "fav_type", "create_time"]
 
 

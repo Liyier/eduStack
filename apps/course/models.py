@@ -1,13 +1,17 @@
 from django.db import models
+from publisher.models import Publisher, Teacher
 
 
 class Course(models.Model):
+    
     level_choices = (
-        (1, "初级"),
-        (2, "中级"),
-        (3, "高级")
+        ("初级", "初级"),
+        ("中级", "中级"),
+        ("高级", "高级")
     )
     name = models.CharField(max_length=50, verbose_name="课程名称")
+    # publisher = models.ForeignKey(Publisher, on_delete=models.CASCADE, verbose_name="发布方")
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, verbose_name="教师")
     description = models.CharField(max_length=200, verbose_name="描述")
     detail = models.TextField(verbose_name="课程详情")
     level = models.CharField(max_length=5, choices=level_choices, verbose_name="课程难度")
@@ -15,7 +19,7 @@ class Course(models.Model):
     learn_num = models.IntegerField(default=0, verbose_name="学习人数")
     fav_num = models.IntegerField(default=0, verbose_name="收藏人数")
     click_num = models.IntegerField(default=0, verbose_name="点击量")
-    image = models.ImageField(upload_to="course/Y%/m%", max_length=50, verbose_name="封面图")
+    image = models.ImageField(upload_to="course/%Y/%m", max_length=50, verbose_name="封面图")
     create_time = models.DateTimeField(auto_now_add=True, verbose_name="上线时间")
     update_time = models.DateTimeField(auto_now=True, verbose_name="修改时间")
     # author
@@ -27,7 +31,7 @@ class Course(models.Model):
 
     def __str__(self):
         """以后加上作者"""
-        return "<{}>".format(self.name)
+        return "<{}-{}>".format(self.name, self.teacher.name)
 
 
 class Chapter(models.Model):
@@ -46,6 +50,7 @@ class Chapter(models.Model):
 class Video(models.Model):
     chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE, verbose_name="所属章节")
     name = models.CharField(max_length=50, verbose_name="视频名")
+    url = models.URLField(max_length=100, verbose_name="视频链接", null=True)
     create_time = models.DateTimeField(auto_now_add=True, verbose_name="添加时间")
 
     class Meta:

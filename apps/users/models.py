@@ -17,7 +17,7 @@ class User(AbstractUser):
     update_time = models.DateTimeField(auto_now=True, verbose_name="更新时间")  # 每次save操作自动保存
     #设置五张默认头像
     avatar = models.ImageField(upload_to="user/%Y/%m",
-                               default="user/default/{}.png".format(random.choice(range(1, 6))), max_length=100,
+                               default="user/default/default{}.jpg".format(random.choice(range(1, 6))), max_length=100,
                                verbose_name="头像")
     # department = models.ForeignKey
 
@@ -57,7 +57,7 @@ class Banner(models.Model):
 
 class EmailVerifyRecord(models.Model):
     """邮箱验证码"""
-    code = models.CharField(max_length=20, verbose_name="验证码")
+    code = models.CharField(max_length=30, verbose_name="验证码")
     email = models.CharField(max_length=30, verbose_name="邮箱")
     send_time = models.DateTimeField(auto_now_add=True, verbose_name="发送时间")
     send_type = models.CharField(max_length=10, choices=(("register", "注册"), ("forget", "找回密码")), verbose_name="验证码类型")

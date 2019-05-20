@@ -39,7 +39,7 @@ class UserFavorite(models.Model):
         choices=(
             (1, "课程"),
             (2, "教师"),
-            (3, "学院")
+            (3, "机构")
         ), default=1, verbose_name="收藏类型"
     )
     create_time = models.DateTimeField(auto_now_add=True, verbose_name="收藏时间")
