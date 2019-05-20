@@ -74,7 +74,7 @@ html { overflow-y: scroll; }
 .relative{position:relative!important;}
 .clear{ clear:both;}
 .center{text-align:center;}
-.wp{width:1200px; margin:0 auto; position:relative;clear: both;}
+.wp{width:1200px; margin:auto; position:relative;clear: both;}
 .clearfix::after {
     clear: both;
     content: " ";
