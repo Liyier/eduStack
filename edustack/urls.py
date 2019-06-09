@@ -14,19 +14,20 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^pgblog/', include('blog.urls'))
 """
 from django.conf.urls import url, include
-from django.views.generic import TemplateView
+from .views import IndexView
 from users.views import LoginView, RegisterView, ActiveView, ForgetPasswordView, LogoutView, UserVerifyView
 from users.views import PasswordResetView
 import xadmin
 from django.urls import path
 from django.views.static import serve
 from .settings import MEDIA_ROOT
-from publisher.views import UserFavView
+from publisher.views import UserFavView, TeachersView, TeacherDetailView
+# from .settings import STATIC_ROOT
 
 
 urlpatterns = [
     url(r'^admin/', xadmin.site.urls),
-    url(r'^$', TemplateView.as_view(template_name="index.html"), name="index"),
+    url(r'^$', IndexView.as_view(), name="index"),
     url(r'^login/', view=LoginView.as_view(), name="login"),
     url(r"^register/", view=RegisterView.as_view(), name="register"),
     url(r'^captcha/', include('captcha.urls')),
@@ -37,5 +38,14 @@ urlpatterns = [
     path("password_reset/", view=PasswordResetView.as_view(), name="password_reset"),
     path("publisher/", include("publisher.urls")),
     url(r"^media/(?P<path>.*)", serve, {"document_root": MEDIA_ROOT}),
-    path("user_collect/", view=UserFavView.as_view(), name="user_fav")
+    path("user_collect/", view=UserFavView.as_view(), name="user_fav"),
+    # course
+    path("course/", include("course.urls")),
+    path('teachers/', TeachersView.as_view(), name="teachers"),
+    path('teacher_detail/<int:teacher_id>/', TeacherDetailView.as_view(), name="teacher_detail"),
+    path('user/', include('users.urls')),
+    # url(r"^static/(?P<path>.*)", serve, {"document_root": STATIC_ROOT}, name='static'),
 ]
+
+handler404 = 'users.views.page_not_found'
+handler500 = 'users.views.page_error'

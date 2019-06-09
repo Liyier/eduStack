@@ -16,8 +16,8 @@ class GlobalSetting(object):
 
 class BannerAdmin(object):
 
-    list_display = ["index", "title", "image", "url", "create_time"]
-    search_fields= ["title", "image", "index", "url"]  # 搜索字段
+    list_display = ["index",  "image", "url", "create_time"]
+    search_fields= ["image", "index", "url"]  # 搜索字段
     list_filter = ["index", "create_time"]  # 筛选字段
 
 

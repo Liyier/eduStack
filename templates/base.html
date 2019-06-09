@@ -9,6 +9,7 @@
 	<link rel="stylesheet" type="text/css" href="/static/css/reset.css">
 	<link rel="stylesheet" type="text/css" href="/static/css/animate.css">
 	<link rel="stylesheet" type="text/css" href="/static/css/style.css">
+    {% block personal_css %}{% endblock %}
     
     <script src="/static/js/jquery.min.js" type="text/javascript"></script>
     <script src="/static/js/jquery-migrate-1.2.1.min.js" type="text/javascript"></script>
@@ -19,7 +20,7 @@
 		<div  class=" header">
  			<div class="top">
 				<div class="wp">
-					<div class="fl"><p>联系方式：<b>863022689</b></p></div>
+					<div class="fl"><p>联系方式：<b>edustack@sina.com</b></p></div>
 					<!--登录后跳转-->
                     {% if request.user.is_authenticated %}
                         <div class="personal">
@@ -36,10 +37,13 @@
 	                                </dd>
                                 </dl>
                                 <div class="btn">
-	                                <a class="personcenter fl" href="usercenter-info.html">进入个人中心</a>
+	                                <a class="personcenter fl" href="{% url 'user_info' %}">进入个人中心</a>
 	                                <a class="fr" href="{% url 'logout' %}">退出</a>
                                 </div>
                             </div>
+                        <a href="{% url 'user_messages' %}">
+                            <div class="msg-num"><span id="MsgNum">{{ request.user.message_unread_num  }}</span></div>
+                        </a>
                         </div>
                     {% else %}
                         <a style="color:white" class="fr registerbtn" href="{% url 'register' %}">注册</a>
@@ -59,11 +63,11 @@
                             </span>
                             <ul class="selectMenu" id="jsSelectMenu">
                                 <li data-value="course">课程</li>
-                                <li data-value="org">机构</li>
+                                <li data-value="publisher">机构</li>
                                 <li data-value="teacher">老师</li>
                             </ul>
                         </div>
-                        <input id="search_keywords" class="fl" type="text" value="" placeholder="请输入搜索内容"/>
+                        <input id="search_keywords" class="fl" type="text" value="{{ keyword }}" placeholder="请输入搜索内容"/>
                         <img class="search_btn fr" id="jsSearchBtn" src="/static/images/search_btn.png"/>
                     </div>
                 </div>
@@ -74,14 +78,14 @@
                     <div class="nav">
                         <div class="wp">
                             <ul>
-                                <li class="active" ><a href="{% url 'index' %}">首页</a></li>
-                                <li >
-                                    <a href="course-list.html">
+                                <li><a href="{% url 'index' %}">首页</a></li>
+                                <li>
+                                    <a href="{% url 'courses' %}">
                                         课程<img class="hot" src="/static/images/nav_hot.png">
                                     </a>
                                 </li>
                                 <li >
-                                    <a href="teachers-list.html">教师</a>
+                                    <a href="{% url 'teachers' %}">教师</a>
                                 </li>
                                 <li ><a href="{% url 'publishers' %}">机构</a></li>
                             </ul>
@@ -103,7 +107,7 @@
 				<ul class="cont">
 					<li class="logo"><img style="margin-top: 15px" src="/static/images/logo.png"/></li>
 					<li class="code"><img src="/static/images/code.gif"/><p class="center">扫描关注微信</p></li>
-					<li class="third"><img class="fl" src="/static/images/tell.png"/><p class="tell">联系我们</p><p class="time">eduStack@sina.com</p></li>
+					<li class="third"><img class="fl" src="/static/images/tell.png"/><p class="tell">联系我们</p><p class="time">edustack@sina.com</p></li>
 				</ul>
 
 			</div>
@@ -115,14 +119,14 @@
 		</div>
 	</footer>
 
-    <section>
-        <ul class="sidebar">
+{#    <section>#}
+{#        <ul class="sidebar">#}
     {#        <li class="qq">#}
     {#            <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=2023525077&site=qq&menu=yes"></a>#}
     {#        </li>#}
-            <li class="totop"></li>
-        </ul>
-    </section>
+{#            <li class="totop"></li>#}
+{#        </ul>#}
+{#    </section>#}
 
 <script src="{% static 'js/selectUi.js' %}" type='text/javascript'></script>
 <script src="{% static 'js/deco-common.js' %}" type='text/javascript'></script>

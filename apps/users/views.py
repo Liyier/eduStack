@@ -1,7 +1,10 @@
 from utils.send_mails import send_types_email
 
 import time
+import json
 
+from django.shortcuts import render_to_response
+from pure_pagination import Paginator, PageNotAnInteger
 from django.views.generic.base import View
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
@@ -10,7 +13,12 @@ from django.contrib.auth.hashers import make_password
 from django.http import HttpResponse
 from .models import User, EmailVerifyRecord
 from django.db.models import Q
-from .forms import LoginForm, RegisterForm, ForgetPasswordForm, PasswordResetForm
+from .forms import LoginForm, RegisterForm, ForgetPasswordForm, PasswordResetForm, AvatarUpdateForm
+from .forms import PasswordModifyForm, UserInfoForm
+from utils.auth import LoginRequiredView
+from operation.models import UserCourse, UserFavorite, UserMessage
+from course.models import Course
+from publisher.models import Teacher, Publisher
 
 
 class UserBackend(ModelBackend):
@@ -27,7 +35,10 @@ class UserBackend(ModelBackend):
 
 class LoginView(View):
     def get(self, request):
-        return render(request, "login.html", {})
+        
+        return render(request, "login.html", {
+            "referer": request.__dict__["META"].get("HTTP_REFERER", '')
+        })
 
     def post(self, request):
         login_form = LoginForm(request.POST)
@@ -56,7 +67,11 @@ class LoginView(View):
 class LogoutView(View):
     def get(self, request):
         logout(request)
-        return redirect("/")
+        referer = request.__dict__["META"].get("HTTP_REFERER", '')        
+        if referer:
+            return redirect(referer)
+        else:
+            return redirect('/')
 
 
 class RegisterView(View):
@@ -80,6 +95,9 @@ class RegisterView(View):
             new_user.is_active = False
             new_user.save()
             send_types_email(email, _type="register")
+            first_message = UserMessage(from_user_id=0, to_user_id=new_user.id, 
+                                        content="欢迎注册eduStack，祝您在本站有所收获。")
+            first_message.save()
             return render(request, "login.html", {"register_form": register_form})
         return render(request, 'register.html', {"register_form": register_form})
 
@@ -164,7 +182,6 @@ class PasswordResetView(View):
         只允许post访问
         """
         password_reset_form = PasswordResetForm(request.POST)
-        print(request.POST)
         if password_reset_form.is_valid():
             email = request.POST.get("email", "")
             new_password = request.POST.get("new_password", "")
@@ -180,5 +197,161 @@ class PasswordResetView(View):
                 return render(request, "password_reset.html", {"password_reset_form": password_reset_form, "msg": msg})
             
         else:
-            print("表单错误")
             return render(request, "password_reset.html", {"password_reset_form": password_reset_form})
+
+
+class UserInfoView(LoginRequiredView, View):
+    def get(self, request):
+        return render(request, 'usercenter-info.html', {
+            "current_page": 'info'
+        })
+
+    def post(self, request):
+        user_info_form = UserInfoForm(request.POST, instance=request.user)
+        if user_info_form.is_valid():
+            user_info_form.save()
+            return HttpResponse('{"status":"success"}', content_type='application/json')
+        else:
+            return HttpResponse(json.dumps(user_info_form.errors), content_type='application/json')
+    
+    
+class PasswordModifyView(LoginRequiredView, View):
+    def post(self, request):
+        pwd_form = PasswordModifyForm(request.POST)
+        if pwd_form.is_valid():
+            pwd1 = request.POST.get("password1", "")
+            pwd2 = request.POST.get("password2", "")
+            if pwd1 != pwd2:
+                return HttpResponse('{"status":"fail","msg":"密码不一致"}', content_type='application/json')
+            user = request.user
+            user.password = make_password(pwd2)
+            user.save()
+
+            return HttpResponse('{"status":"success"}', content_type='application/json')
+        else:
+            return HttpResponse(json.dumps(pwd_form.errors), content_type='application/json')
+
+
+class AvatarUpdateView(LoginRequiredView, View):
+    """修改用户头像"""
+    def post(self, request):
+        form = AvatarUpdateForm(request.POST, request.FILES, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return HttpResponse('{"status":"successed"}', content_type='application/json')
+        else:
+            return HttpResponse('{"status":"failed"}', content_type='application/json')
+
+
+class EmailUpdateView(LoginRequiredView, View):
+    def post(self, request):
+        
+        email = request.POST.get('email', '')
+        code = request.POST.get('code', '')
+        try:
+            
+            record = EmailVerifyRecord.objects.get(email=email, code=code, send_type='update')
+            # 30分钟内有效
+            if record.is_active and (int(time.time()) - record.send_time.timestamp()) < (30 * 60):
+                user = request.user
+                user.email = email
+                user.save()
+                record.is_active = False
+                record.save()
+                return HttpResponse('{"status":"success"}', content_type='application/json')
+            else:
+                record.is_active = False
+                record.save()
+                return HttpResponse('{"status":"fail", "msg":"验证码已过期"}', content_type='application/json')
+        except EmailVerifyRecord.DoesNotExist:
+            # 无查询记录
+            return HttpResponse('{"status":"fail","msg":"验证码错误"}', content_type='application/json')
+        
+
+class VerificationCodeView(LoginRequiredView, View):
+    """发送邮箱验证码"""
+    def get(self, request):
+        email = request.GET.get('email', '')
+        if User.objects.filter(email=email).exists():
+            return HttpResponse('{"status":"fail","msg":"邮箱已经存在"}', content_type='application/json')
+        else:
+            status = send_types_email(email, _type='update')
+            if status:
+                return HttpResponse('{"status":"success"}', content_type='application/json')
+            else:
+                return HttpResponse('{"status":"fail","msg":"发送失败"}', content_type='application/json')
+
+
+class UserCoursesView(LoginRequiredView, View):
+    def get(self, request):
+        user_courses = UserCourse.objects.filter(user_id=request.user.id)
+        return render(request, 'usercenter-mycourse.html', {
+            "current_page": 'course',
+            "user_courses": user_courses
+        })
+    
+
+class UserFavsView(LoginRequiredView, View):
+    def get(self, request):
+        # 默认收藏类型为机构
+        fav_type = int(request.GET.get("fav_type", 3))
+        try:
+            page = request.GET.get('page', 1)
+        except PageNotAnInteger:
+            page = 1
+        page_fav_courses = page_fav_teachers = page_fav_publishers = []
+        results = UserFavorite.objects.filter(user=request.user, fav_type=fav_type).values('data_id')
+
+        if fav_type == 1:
+            # 收藏类型为课程
+            fav_courses =[Course.objects.get(id=item['data_id']) for item in results]
+            p = Paginator(fav_courses, per_page=2, request=request)
+            page_fav_courses = p.page(page)
+        elif fav_type == 2:
+            fav_teachers = [Teacher.objects.get(id=item['data_id']) for item in results]
+            p = Paginator(fav_teachers, per_page=2, request=request)
+            page_fav_teachers = p.page(page)
+        else:
+            fav_publishers = [Publisher.objects.get(id=item['data_id']) for item in results]
+            p = Paginator(fav_publishers, per_page=2, request=request)
+            page_fav_publishers = p.page(page)
+            
+        return render(request, 'usercenter-fav-course.html', {
+            'fav_type': fav_type,
+            "fav_teachers": page_fav_teachers,
+            "fav_publishers": page_fav_publishers,
+            "fav_courses": page_fav_courses
+        })
+    
+    
+class UserMessagesView(LoginRequiredView, View):
+    def get(self, request):
+        # 用户系统消息, 即系统广播消息或对用户的私信
+        messages = UserMessage.objects.filter(
+            Q(to_user_id=0) |
+            Q(to_user_id=request.user.id), from_user_id=0
+        ).order_by('-create_time')
+        try:
+            page = request.GET.get('page', 1)
+        except PageNotAnInteger:
+            page = 1
+        p = Paginator(messages, per_page=10, request=request)
+        page_messages = p.page(page)
+        for message in page_messages.object_list:
+            message.is_read = True
+            message.save()
+        return render(request, 'usercenter-message.html', {
+            "messages": page_messages
+        })
+
+
+def page_not_found(request, **kwargs):
+    response = render_to_response('404.html', {})
+    response.status_code = 404 
+    return response
+
+
+def page_error(request):
+    response = render_to_response('500.html', {})
+    response.status_code = 500
+    return response

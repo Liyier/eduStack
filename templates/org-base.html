@@ -151,8 +151,9 @@ function add_fav(current_elem, fav_id, fav_type){
         success: function(data) {
             if(data.status == 'failed'){
                 if(data.msg == '用户未登录'){
-                    {#window.location.href="/login/";#}
+                    
                     window.alert("用户未登录")
+                    {#window.location.href="/login/";#}
                 }else{
                     alert(data.msg)
                 }

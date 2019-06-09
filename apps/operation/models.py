@@ -1,6 +1,7 @@
 from django.db import models
 from users.models import User
 from course.models import Course
+from users.models import User
 
 
 class CourseComments(models.Model):
@@ -49,11 +50,14 @@ class UserFavorite(models.Model):
         verbose_name_plural = verbose_name
 
     def __str__(self):
-        return "<{} marked  {} {} as favorite at {}>".format(self.user.username, self.fav_type, self.data_id, self.create_time)
+        return "<{} marked  {} {} as favorite at {}>".format(self.user.username, self.fav_type, 
+                                                             self.data_id, self.create_time)
 
 
 class UserMessage(models.Model):
-    user_id = models.IntegerField(default=0, verbose_name="用户id")  # 0 默认给所有用户发送
+    # 广播无法统计未读，所以一般禁用广播
+    to_user_id = models.IntegerField(default=0, verbose_name="接受消息用户id")  # 0 默认给所有用户发送
+    from_user_id = models.IntegerField(default=0, verbose_name="发送消息用户id")  # 默认是系统发往用户
     content = models.TextField(verbose_name="消息内容")
     is_read = models.BooleanField(default=False, verbose_name="是否已读")
     create_time = models.DateTimeField(auto_now_add=True, verbose_name="接收时间")
@@ -63,6 +67,13 @@ class UserMessage(models.Model):
         verbose_name_plural = verbose_name
 
     def __str__(self):
-        return "<{} {}>".format(self.user_id, self.content)
+        return "<{}>".format(self.content)
+    
+    def get_from_user(self):
+        try:
+            user = User.objects.get(id=self.from_user_id)
+            return user
+        except User.DoesNotExist:
+            return False
 
 

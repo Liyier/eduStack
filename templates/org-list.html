@@ -20,12 +20,12 @@
                             <ul>
                                 <li class="" ><a href="{% url 'index' %}">首页</a></li>
                                 <li >
-                                    <a href="">
+                                    <a href="{% url 'courses' %}">
                                         课程<img class="hot" src="/static/images/nav_hot.png">
                                     </a>
                                 </li>
                                 <li >
-                                    <a href="">教师</a>
+                                    <a href="{% url 'teachers' %}">教师</a>
                                 </li>
                                 <li class="active"><a href="{% url 'publishers' %}">机构</a></li>
                             </ul>
@@ -58,9 +58,9 @@
 		<div class="layout">
 			<div class="head">
 				<ul class="tab_header">
-					<li {% ifequal sort_by '' %}class="active"{% endifequal %}><a href="?ct=">全部</a> </li>
-					<li {% ifequal sort_by 'fav_num' %}class="active"{% endifequal %}><a href="?sort_by=fav_num&category={{ category }}">收藏人数 &#8595;</a></li>
-					<li {% ifequal sort_by 'course_num' %}class="active"{% endifequal %}><a href="?sort_by=course_num&category={{ category }}">课程数 &#8595;</a></li>
+					<li {% ifequal sort_by '' %}class="active"{% endifequal %}><a href="?keyword={{ keyword }}&category={{ category }}">全部</a> </li>
+					<li {% ifequal sort_by 'fav_num' %}class="active"{% endifequal %}><a href="?keyword={{ keyword }}&sort_by=fav_num&category={{ category }}">收藏人数 &#8595;</a></li>
+					<li {% ifequal sort_by 'course_num' %}class="active"{% endifequal %}><a href="?keyword={{ keyword }}&sort_by=course_num&category={{ category }}">课程数 &#8595;</a></li>
 				</ul>
 			</div>
                 {% for publisher in publishers.object_list %}
@@ -80,17 +80,18 @@
                         </div>
                         <ul class="cont">
                             <li class="first"><p class="pic9">课程数：<span>{{ publisher.course_num }}</span></p><p class="c7">学习人数：<span>{{ publisher.fav_num }}</span></p></li>
-                            <li class="c8" style="padding-left:18px;">{{ publisher.intro }}</li>
+                            <li class="c8" style="padding-left:18px;">{{ publisher.intro}}</li>
                             <li class="pic10" style="padding-left:18px;">经典课程：
 
-                                    <a href="/diary/19/">c语言基础入门</a>
+                                {% for course in publisher.top_courses %}
+                                    <a href="{% url 'course_detail' course.id %}">{{ course.name }}</a>
 
-                                    <a href="/diary/16/">数据库基础</a>
+                                {% endfor %}
 
                             </li>
                         </ul>
                     </dd>
-                    <div class="buy start_groupbuy jsShowPerfect2" data-id="22"><br/>联系<br/>服务</div>
+                    <a href="{% url 'publisher-index' publisher.id %}"><div class="buy start_groupbuy jsShowPerfect2" data-id="22"><br/>查看<br/>详情</div></a>
                 </dl>
                 {% endfor %}
                 
@@ -140,17 +141,17 @@
                     <input type="text" name="ad" id="companyAddress" placeholder="广告描述" maxlength="50" />
                 </div>
                 <p class="error company-tips" id="jsCompanyTips"></p>
-				<input class="btn" type="text" id="jsStayBtn" value="立即发送邮件 >" />
+				<input onclick="alert('该功能暂未上线')" class="btn" type="text" id="jsStayBtn" value="立即发送邮件" />
             </form>
 		</div>
 
 		<div class="right companyrank layout">
-			<div class="head">机构热度排名</div>
+			<div class="head">热门机构</div>
             {% for item in top_publisher %}
                 <dl class="des">
                     <dt class="num fl">{{ forloop.counter }}</dt>
                     <dd>
-                        <a href="/company/2/"><h1>{{ item.name }}</h1></a>
+                        <a href="{% url 'publisher-index' item.id %}"><h1>{{ item.name }}</h1></a>
                         <p>点击数:{{ item.click_num }}</p>
                     </dd>
                 </dl>

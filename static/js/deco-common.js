@@ -67,11 +67,11 @@ function search_click(){
         return
     }
     if(type == "course"){
-        request_url = "/course/list?keywords="+keywords
+        request_url = "/course/courses?keyword="+keywords
     }else if(type == "teacher"){
-        request_url = "/org/teacher/list?keywords="+keywords
-    }else if(type == "org"){
-        request_url = "/org/list?keywords="+keywords
+        request_url = "/teachers?keyword="+keywords
+    }else if(type == "publisher"){
+        request_url = "/publisher/publishers?keyword="+keywords
     }
     window.location.href = request_url
 }

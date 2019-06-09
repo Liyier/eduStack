@@ -12,7 +12,7 @@ function sendCodeChangeEmail($btn){
         cache: false,
         type: "get",
         dataType:'json',
-        url:"/users/sendemail_code/",
+        url:"/user/verification_code/",
         data:$('#jsChangeEmailForm').serialize(),
         async: true,
         beforeSend:function(XMLHttpRequest){
@@ -24,8 +24,8 @@ function sendCodeChangeEmail($btn){
                 Dml.fun.showValidateError($('#jsChangeEmail'), data.email);
             }else if(data.status == 'success'){
                 Dml.fun.showErrorTips($('#jsChangeEmailTips'), "邮箱验证码已发送");
-            }else if(data.status == 'failure'){
-                 Dml.fun.showValidateError($('#jsChangeEmail'), "邮箱验证码发送失败");
+            }else if(data.status == 'fail'){
+                 Dml.fun.showValidateError($('#jsChangeEmail'), "该邮箱已被绑定");
             }else if(data.status == 'success'){
             }
         },
@@ -50,7 +50,7 @@ var verify = verifyDialogSubmit(
         cache: false,
         type: 'post',
         dataType:'json',
-        url:"/users/update_email/ ",
+        url:"/user/email_update/ ",
         data:$('#jsChangeEmailForm').serialize(),
         async: true,
         beforeSend:function(XMLHttpRequest){
@@ -65,7 +65,7 @@ var verify = verifyDialogSubmit(
                 Dml.fun.showErrorTips($('#jsChangePhoneTips'), "邮箱信息更新成功");
                 setTimeout(function(){location.reload();},1000);
             }else{
-                 Dml.fun.showValidateError($('#jsChangeEmail'), "邮箱信息更新失败");
+                 Dml.fun.showValidateError($('#jsChangeEmail'), data.msg);
             }
         },
         complete: function(XMLHttpRequest){
@@ -86,7 +86,7 @@ $(function(){
             cache: false,
             type: "POST",
             dataType:'json',
-            url:"/users/update/pwd/",
+            url:"/user/pwd_modify/",
             data:$('#jsResetPwdForm').serialize(),
             async: true,
             success: function(data) {
@@ -160,7 +160,7 @@ $(function(){
             cache: false,
             type: 'post',
             dataType:'json',
-            url:"/users/info/",
+            url:"/user/info/",
             data:$jsEditUserForm.serialize(),
             async: true,
             beforeSend:function(XMLHttpRequest){
@@ -174,17 +174,19 @@ $(function(){
                    _showValidateError($('#birth_day'), data.birday);
                 }else if(data.address){
                    _showValidateError($('#address'), data.address);
-                }else if(data.status == "failure"){
-                     Dml.fun.showTipsDialog({
-                        title: '保存失败',
-                        h2: data.msg
-                    });
                 }else if(data.status == "success"){
-                    Dml.fun.showTipsDialog({
+                     
+                     Dml.fun.showTipsDialog({
                         title: '保存成功',
                         h2: '个人信息修改成功！'
                     });
                     setTimeout(function(){window.location.href = window.location.href;},1500);
+                }else {
+                    // Dml.fun.showTipsDialog({
+                    //     title: '保存失败',
+                    //     h2: data.msg
+                    // });
+                    alert("保存失败，请检查填写数据")
                 }
             },
             complete: function(XMLHttpRequest){

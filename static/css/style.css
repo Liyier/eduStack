@@ -2009,7 +2009,7 @@ textarea:focus {
 }
 
 .module1_3, .module1_5, .module1_6, .module1_7 {
-    margin-right: 10px;
+    margin-right: 5px;
 }
 
 .module1_5, .module1_6, .module1_7, .module1_8 {
@@ -3106,7 +3106,7 @@ footer .footer .line {
 
 .groupPurchase_detail .toppro .right .head {
     background: #717171;
-    height: 70px;
+    height: 60px;
     color: #fff;
     line-height: 30px;
     text-indent: 20px;

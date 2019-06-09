@@ -26,9 +26,9 @@ class UserFavoriteAdmin(object):
 
 
 class UserMessageAdmin(object):
-    list_display = ["user_id", "content", "is_read", "create_time"]
-    search_fields = ["user_id", "content"]
-    list_filter = ["user_id", "is_read", "create_time"]
+    list_display = ["to_user_id", "from_user_id", "content", "is_read", "create_time"]
+    search_fields = ["to_user_id", "from_user_id", "content"]
+    list_filter = ["to_user_id", "from_user_id", "is_read", "create_time"]
 
 
 xadmin.site.register(CourseComments, CourseCommentsAdmin)

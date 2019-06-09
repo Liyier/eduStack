@@ -25,9 +25,9 @@ sys.path.insert(0, os.path.join(BASE_DIR, "apps"))
 SECRET_KEY = '($-103-81wtaq9qa=)gbtbssf_k_9n2vb*s)!mk%2cx80ijxha'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*',]
 
 AUTHENTICATION_BACKENDS = (
     "users.views.UserBackend",
@@ -147,6 +147,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+# STATIC_ROOT = os.path.join(BASE_DIR, '/static/')
+# STATIC_ROOT = 'static'
 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),

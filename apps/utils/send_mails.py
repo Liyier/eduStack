@@ -12,19 +12,28 @@ from django.core.mail import send_mail
 
 def send_types_email(email, _type):
     email_verify_record = EmailVerifyRecord()
-    email_verify_record.code = generate_random_string(16)
+    
     email_verify_record.email = email
     if _type == "register":
         email_verify_record.send_type = _type
+        email_verify_record.code = generate_random_string(16)
         email_verify_record.save()
         email_subject = "eduStack注册激活链接"
         email_body = "请点击下面的链接以激活账号\n{}".format("http://127.0.0.1:8000/user_active/" + email_verify_record.code)
 
     elif _type == "forget":
         email_verify_record.send_type = _type
+        email_verify_record.code = generate_random_string(16)
         email_verify_record.save()
         email_subject = "eduStack修改密码链接"
         email_body = "请点击下面的链接以完成邮箱验证并跳转至重置密码页面\n{}".format("http://127.0.0.1:8000/password_forget/" + email_verify_record.code)
+    elif _type == 'update':
+        email_verify_record.send_type = _type
+        # 六位数验证码
+        email_verify_record.code = random.randrange(100000, 999999)
+        email_verify_record.save()
+        email_subject = "eduStack修改绑定邮箱验证码"
+        email_body = "您的六位验证码为{}, 半个小时内有效， 如非您本人操作请忽略...".format(email_verify_record.code)
     else:
         # 预防以后还有其他send_type扩展
         return None

@@ -27,7 +27,7 @@ class Publisher(models.Model):
         
     def __str__(self):
         return "{}".format(self.name)
-
+    
 
 class Teacher(models.Model):
     teacher_titles = (
@@ -39,7 +39,6 @@ class Teacher(models.Model):
     name = models.CharField(max_length=10, verbose_name="教师名称")
     intro = models.CharField(max_length=100, verbose_name="简介")
     publisher = models.ForeignKey(Publisher, on_delete=models.CASCADE, verbose_name="所属机构")
-    course_num = models.IntegerField(default=0, verbose_name="课程数")
     fav_num = models.IntegerField(default=0, verbose_name="收藏人数")
     click_num = models.IntegerField(default=0, verbose_name="点击量")
     title = models.IntegerField(choices=teacher_titles, verbose_name="教师职称")
@@ -47,6 +46,7 @@ class Teacher(models.Model):
     create_time = models.DateTimeField(auto_now_add=True)
     avatar = models.ImageField(upload_to="teacher/%Y/%m", default="teacher/default.png",
                                verbose_name="教师头像")
+    point = models.CharField(max_length=30, default="风趣幽默，专业知识过硬", verbose_name="教学特点")
     
     class Meta:
         verbose_name = "教师"
@@ -54,5 +54,6 @@ class Teacher(models.Model):
 
     def __str__(self):
         return "{}({})".format(self.name, self.title)
+    
 
 

@@ -15,20 +15,22 @@ class Course(models.Model):
     description = models.CharField(max_length=200, verbose_name="描述")
     detail = models.TextField(verbose_name="课程详情")
     level = models.CharField(max_length=5, choices=level_choices, verbose_name="课程难度")
-    time = models.IntegerField(default=0, verbose_name="学习时常(分钟数)")
+    time = models.IntegerField(default=0, verbose_name="学习时长(分钟数)")
     learn_num = models.IntegerField(default=0, verbose_name="学习人数")
     fav_num = models.IntegerField(default=0, verbose_name="收藏人数")
     click_num = models.IntegerField(default=0, verbose_name="点击量")
     image = models.ImageField(upload_to="course/%Y/%m", max_length=50, verbose_name="封面图")
     create_time = models.DateTimeField(auto_now_add=True, verbose_name="上线时间")
     update_time = models.DateTimeField(auto_now=True, verbose_name="修改时间")
-    # author
-
+    category = models.CharField(max_length=20, default="计算机基础", verbose_name="课程类别")
+    notice = models.CharField(max_length=50, default="具备计算机基础知识", verbose_name="课程须知")
+    harvest = models.CharField(max_length=50, default="入门计算机编程", verbose_name="课程收获")
+    
     class Meta:
         db_table = "courses"
         verbose_name = "课程"
         verbose_name_plural = verbose_name
-
+        
     def __str__(self):
         """以后加上作者"""
         return "<{}-{}>".format(self.name, self.teacher.name)
@@ -51,7 +53,8 @@ class Video(models.Model):
     chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE, verbose_name="所属章节")
     name = models.CharField(max_length=50, verbose_name="视频名")
     url = models.URLField(max_length=100, verbose_name="视频链接", null=True)
-    create_time = models.DateTimeField(auto_now_add=True, verbose_name="添加时间")
+    create_time = models.DateTimeField(auto_now_add=True, verbose_name="添加时间")    
+    time = models.IntegerField(default=0, verbose_name="视频长度(秒)")
 
     class Meta:
         verbose_name = "课程视频"
