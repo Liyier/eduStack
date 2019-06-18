@@ -27,6 +27,6 @@ def has_fav(user, data_id, fav_type):
 def get_relate_courses(course):
     user_ids = UserCourse.objects.filter(course=course).values('user_id')
     course_ids = UserCourse.objects.filter(user_id__in=user_ids).values('course_id')
-    relate_courses = Course.objects.filter(id__in=course_ids).exclude(id=course.id)
+    relate_courses = Course.objects.filter(id__in=course_ids).exclude(id=course.id).order_by("-click_num")
     return relate_courses[:3]
 
